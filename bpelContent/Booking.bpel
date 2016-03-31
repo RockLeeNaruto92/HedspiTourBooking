@@ -5,7 +5,7 @@
          suppressJoinFailure="yes"
          xmlns:tns="http://eclipse.org/bpel/sample/booking"
          xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-         >
+         xmlns:ns="urn:hotel_ws" xmlns:ns0="urn:airline_ws" xmlns:ns1="urn:travel_ws">
 
     <!-- Import the client WSDL -->
 	<bpel:import location="BookingArtifacts.wsdl" namespace="http://eclipse.org/bpel/sample/booking" 
@@ -21,6 +21,12 @@
                      partnerLinkType="tns:Booking"
                      myRole="BookingProvider"
                      />
+        
+        
+        
+        <bpel:partnerLink name="HotelPL" partnerLinkType="tns:HotelPLT" partnerRole="HotelRole"></bpel:partnerLink>
+        <bpel:partnerLink name="AirlinePL" partnerLinkType="tns:AirlinePLT" partnerRole="AirlinePLT"></bpel:partnerLink>
+        <bpel:partnerLink name="TravelPL" partnerLinkType="tns:TravelPLT" partnerRole="TravelRole"></bpel:partnerLink>
     </bpel:partnerLinks>
   
     <!-- ================================================================= -->         
@@ -37,6 +43,30 @@
           -->
         <bpel:variable name="output"
                   messageType="tns:BookingResponseMessage"/>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <bpel:variable name="HotelPLResponse" messageType="ns:add_new_constract_response"></bpel:variable>
+        <bpel:variable name="HotelPLRequest" messageType="ns:add_new_constract"></bpel:variable>
+        <bpel:variable name="AirlinePLResponse" messageType="ns0:add_new_constract_response"></bpel:variable>
+        <bpel:variable name="AirlinePLRequest" messageType="ns0:add_new_constract"></bpel:variable>
+        <bpel:variable name="TravelPLResponse" messageType="ns1:add_new_constract_response"></bpel:variable>
+        <bpel:variable name="TravelPLRequest" messageType="ns1:add_new_constract"></bpel:variable>
+        <bpel:variable name="HotelPLResponse1" messageType="ns:check_available_hotel_response"></bpel:variable>
+        <bpel:variable name="HotelPLRequest1" messageType="ns:check_available_hotel"></bpel:variable>
+        
+        
+        <bpel:variable name="AirlinePLResponse1" messageType="ns0:check_available_flight_response"></bpel:variable>
+        <bpel:variable name="AirlinePLRequest1" messageType="ns0:check_available_flight"></bpel:variable>
+        <bpel:variable name="TravelPLResponse1" messageType="ns1:check_available_tour_response"></bpel:variable>
+        <bpel:variable name="TravelPLRequest1" messageType="ns1:check_available_tour"></bpel:variable>
     </bpel:variables>
 
     <!-- ================================================================= -->         
@@ -44,23 +74,381 @@
     <!-- Set of activities coordinating the flow of messages across the    -->
     <!-- services integrated within this business process                  -->
     <!-- ================================================================= -->         
-    <bpel:sequence name="main">
-        
-        <!-- Receive input from requester. 
+    <bpel:sequence name="main"><!-- Receive input from requester. 
              Note: This maps to operation defined in Booking.wsdl 
-             -->
-        <bpel:receive name="receiveInput" partnerLink="client"
-                 portType="tns:Booking"
-                 operation="process" variable="input"
-                 createInstance="yes"/>
+             --><bpel:receive name="receiveInput" partnerLink="client" portType="tns:Booking" operation="process" variable="input" createInstance="yes" />
         
         <!-- Generate reply to synchronous request -->
-        <bpel:reply name="replyOutput" 
-               partnerLink="client"
-               portType="tns:Booking"
-               operation="process" 
-               variable="output"
-               />
+        <bpel:flow name="Flow1"><bpel:sequence name="AvailableHotelSequence">
+                <bpel:assign validate="no" name="AvailableHotelAssign">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:check_available_hotel_request xmlns:tns="urn:hotel_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:hotelCode>tns:hotelCode</tns:hotelCode>
+</tns:check_available_hotel_request>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="HotelPLRequest1" part="hotelCode"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="hotelCode" variable="HotelPLRequest1">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:hotelCode]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="AvailableHotelInvoke" partnerLink="HotelPL" operation="check_available_hotel" portType="ns:hotel_services_port" inputVariable="HotelPLRequest1" outputVariable="HotelPLResponse1"></bpel:invoke>
+            </bpel:sequence><bpel:sequence name="AvailableFlightSequence">
+                <bpel:assign validate="no" name="AvailableFlightAssign">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:check_available_flight_request xmlns:tns="urn:airline_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:flightCode>tns:flightCode</tns:flightCode>
+</tns:check_available_flight_request>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="AirlinePLRequest1" part="flightCode"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="flightCode" variable="AirlinePLRequest1">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns0:flightCode]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="AvailableHotelInvoke" partnerLink="AirlinePL" operation="check_available_flight" portType="ns0:airline_services_port" inputVariable="AirlinePLRequest1" outputVariable="AirlinePLResponse1"></bpel:invoke>
+            </bpel:sequence><bpel:sequence name="AvailableTourSequence">
+                <bpel:assign validate="no" name="AvailableTourAssign">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:check_available_tour_request xmlns:tns="urn:travel_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:tourCode>tns:tourCode</tns:tourCode>
+</tns:check_available_tour_request>
+</bpel:literal></bpel:from>
+                        <bpel:to part="tourCode" variable="TravelPLRequest1"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="tourCode" variable="TravelPLRequest1">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns1:tourCode]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="AvailableTourInvoke" partnerLink="TravelPL" operation="check_available_tour" portType="ns1:travel_services_port" inputVariable="TravelPLRequest1" outputVariable="TravelPLResponse1"></bpel:invoke>
+            </bpel:sequence></bpel:flow>
+        
+        
+        <bpel:if name="If">
+            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$TravelPLResponse1.result/result = "true"]]></bpel:condition>
+            <bpel:sequence>
+                <bpel:flow name="Flow">
+                <bpel:sequence name="HotelSequence"><bpel:assign validate="no" name="HotelAssignInput">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:add_new_constract_request xmlns:tns="urn:hotel_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:hotelId>0</tns:hotelId>
+  <tns:customerIdNumber>tns:customerIdNumber</tns:customerIdNumber>
+  <tns:companyName>tns:companyName</tns:companyName>
+  <tns:companyPhone>tns:companyPhone</tns:companyPhone>
+  <tns:companyAddress>tns:companyAddress</tns:companyAddress>
+  <tns:bookingRooms>0</tns:bookingRooms>
+  <tns:checkInDate>tns:checkInDate</tns:checkInDate>
+  <tns:checkOutDate>tns:checkOutDate</tns:checkOutDate>
+</tns:add_new_constract_request>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="HotelPLRequest" part="add_new_constract_request"></bpel:to>
+                    </bpel:copy>
+                    
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:hotelId]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:hotelId]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:customerIdNumber]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:customerIdNumber]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:companyName]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyPhone]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:companyPhone]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyAddress]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:companyAddress]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:bookingRooms]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:bookingRooms]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:checkInDate]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:checkInDate]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:checkOutDate]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="HotelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns:checkOutDate]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="HotelInvoke" partnerLink="HotelPL" operation="add_new_constract" portType="ns:hotel_services_port" inputVariable="HotelPLRequest" outputVariable="HotelPLResponse"></bpel:invoke>
+                
+            
+                </bpel:sequence>
+                <bpel:sequence name="AirlineSequence">
+                <bpel:assign validate="no" name="AirlineAssignInput">
+                    
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:add_new_constract_request xmlns:tns="urn:airline_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:flightId>0</tns:flightId>
+  <tns:customerIdNumber>tns:customerIdNumber</tns:customerIdNumber>
+  <tns:companyName>tns:companyName</tns:companyName>
+  <tns:companyPhone>tns:companyPhone</tns:companyPhone>
+  <tns:companyAddress>tns:companyAddress</tns:companyAddress>
+  <tns:bookingSeats>0</tns:bookingSeats>
+</tns:add_new_constract_request>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="AirlinePLRequest" part="add_new_constract_request"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:flightId]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:flightId]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:bookingSeats]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:bookingSeats]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:customerIdNumber]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:customerIdNumber]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:companyName]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyPhone]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:companyPhone]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyAddress]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="AirlinePLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns0:companyAddress]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="AirlineInvoke" partnerLink="AirlinePL" operation="add_new_constract" portType="ns0:airline_services_port" inputVariable="AirlinePLRequest" outputVariable="AirlinePLResponse"></bpel:invoke>
+                
+            </bpel:sequence>
+                <bpel:sequence name="TravelSequence">
+                <bpel:assign validate="no" name="TravelAssignInput">
+                    
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:add_new_constract_request xmlns:tns="urn:travel_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:tourID>0</tns:tourID>
+  <tns:customerIdNumber>tns:customerIdNumber</tns:customerIdNumber>
+  <tns:companyName>tns:companyName</tns:companyName>
+  <tns:companyPhone>tns:companyPhone</tns:companyPhone>
+  <tns:companyAddress>tns:companyAddress</tns:companyAddress>
+  <tns:bookingTickets>0</tns:bookingTickets>
+</tns:add_new_constract_request>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="TravelPLRequest" part="add_new_constract_request"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:tourId]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="TravelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns1:tourID]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[tns:customerIdNumber]]>
+                            </bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="TravelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns1:customerIdNumber]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="TravelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns1:companyName]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[tns:bookingTickets]]>
+                            </bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="TravelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns1:bookingTickets]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyAddress]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="add_new_constract_request" variable="TravelPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[ns1:companyAddress]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="TravelInvoke" partnerLink="TravelPL" operation="add_new_constract" portType="ns1:travel_services_port" inputVariable="TravelPLRequest" outputVariable="TravelPLResponse"></bpel:invoke>
+                
+            </bpel:sequence>
+            </bpel:flow>
+                <bpel:assign validate="no" name="Assign"><bpel:copy>
+                <bpel:from><bpel:literal><tns:BookingResponse xmlns:tns="http://eclipse.org/bpel/sample/booking" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:result>tns:result</tns:result>
+</tns:BookingResponse>
+</bpel:literal></bpel:from>
+                <bpel:to variable="output" part="payload"></bpel:to>
+            </bpel:copy>
+            <bpel:copy>
+                <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[tns:companyName]]>
+                            </bpel:query>
+                        </bpel:from>
+                <bpel:to part="payload" variable="output">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:result]]></bpel:query>
+                </bpel:to>
+            </bpel:copy>
+        
+                </bpel:assign>
+                
+            </bpel:sequence>
+            <bpel:else>
+                <bpel:sequence name="NotAvailableSequence">
+                    <bpel:assign validate="no" name="NotAvailableAssign">
+                        <bpel:copy>
+                            <bpel:from><bpel:literal><tns:BookingResponse xmlns:tns="http://eclipse.org/bpel/sample/booking" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:result>tns:result</tns:result>
+</tns:BookingResponse>
+</bpel:literal></bpel:from>
+                            <bpel:to variable="output" part="payload"></bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from part="payload" variable="input">
+                                <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyAddress]]></bpel:query>
+                            </bpel:from>
+                            <bpel:to part="payload" variable="output">
+                                <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:result]]></bpel:query>
+                            </bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    
+                </bpel:sequence>
+            </bpel:else>
+        </bpel:if>
+        
+        
+        
+        
+    
+    
+    
+        <bpel:reply name="replyOutput" partnerLink="client" portType="tns:Booking" operation="process" variable="output" />
     </bpel:sequence>
 </bpel:process>
 
