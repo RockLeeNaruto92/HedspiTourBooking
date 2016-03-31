@@ -1,23 +1,34 @@
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
 	xmlns:tns="urn:hotel_ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
-	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="services"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="hotel_services"
 	targetNamespace="urn:hotel_ws">
 	<types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
 			targetNamespace="urn:hotel_ws">
-			<xsd:complexType name="add_new_constract_request">
-				<xsd:sequence>
-					<xsd:element name="hotelID" type="xsd:int" />
-					<xsd:element name="customerIdNumber" type="xsd:string" />
-					<xsd:element name="companyName" type="xsd:string" />
-					<xsd:element name="companyPhone" type="xsd:string" />
-					<xsd:element name="companyAddress" type="xsd:string" />
-					<xsd:element name="bookingRooms" type="xsd:int" />
-					<xsd:element name="checkInDate" type="xsd:date" />
-					<xsd:element name="checkOutDate" type="xsd:date" />
-				</xsd:sequence>
-			</xsd:complexType>
+			<element name="add_new_constract_request">
+				<complexType>
+					<sequence>
+						<element name="hotelId" type="int" />
+						<element name="customerIdNumber" type="string" />
+						<element name="companyName" type="string" />
+						<element name="companyPhone" type="string" />
+						<element name="companyAddress" type="string" />
+						<element name="bookingRooms" type="int" />
+						<element name="checkInDate" type="string" />
+						<element name="checkOutDate" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="add_new_constract_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="string" />
+					</sequence>
+				</complexType>
+			</element>
 		</schema>
 	</types>
 	<message name="add_new_hotel">
@@ -49,10 +60,10 @@
 		<part name="value" type="xsd:string" />
 	</message>
 	<message name="add_new_constract">
-		<part name="add_new_constract_request" type="tns:add_new_constract_request" />
+		<part name="add_new_constract_request" element="tns:add_new_constract_request" />
 	</message>
 	<message name="add_new_constract_response">
-		<part name="result" type="xsd:string" />
+		<part name="result" element="tns:add_new_constract_response" />
 	</message>
 	<message name="check_available_hotel">
 		<part name="hotelCode" type="xsd:string" />
@@ -64,7 +75,7 @@
 	<message name="get_all_hotels_response">
 		<part name="value" type="xsd:string" />
 	</message>
-	<portType name="services_port">
+	<portType name="hotel_services_port">
 		<operation name="add_new_hotel">
 			<input message="tns:add_new_hotel" />
 			<output message="tns:add_new_hotel_response" />
@@ -90,7 +101,7 @@
 			<output message="tns:get_all_hotels_response" />
 		</operation>
 	</portType>
-	<binding name="services_binding" type="tns:services_port">
+	<binding name="hotel_services_binding" type="tns:hotel_services_port">
 		<soap:binding style="document"
 			transport="http://schemas.xmlsoap.org/soap/http" />
 		<operation name="add_new_hotel">
@@ -148,9 +159,9 @@
 			</output>
 		</operation>
 	</binding>
-	<service name="service">
-		<port name="services_port" binding="tns:services_binding">
-			<soap:address location="http://127.0.0.1:3332/services/action" />
+	<service name="hotel_service">
+		<port name="hotel_services_port" binding="tns:hotel_services_binding">
+			<soap:address location="http://127.0.0.1:3332/hotel_services/action" />
 		</port>
 	</service>
 </definitions>
