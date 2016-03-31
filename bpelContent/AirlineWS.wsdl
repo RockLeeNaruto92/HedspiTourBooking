@@ -1,0 +1,172 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="urn:airline_ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="services"
+	targetNamespace="urn:airline_ws">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="urn:airline_ws">
+			<xsd:complexType name="add_new_constract_request">
+				<xsd:sequence>
+					<xsd:element name="flightID" type="xsd:int" />
+					<xsd:element name="customerIdNumber" type="xsd:string" />
+					<xsd:element name="companyName" type="xsd:string" />
+					<xsd:element name="companyPhone" type="xsd:string" />
+					<xsd:element name="companyAddress" type="xsd:string" />
+					<xsd:element name="bookingSeats" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</schema>
+	</types>
+	<message name="add_new_airline">
+		<part name="code" type="xsd:string" />
+		<part name="name" type="xsd:string" />
+		<part name="website" type="xsd:string" />
+	</message>
+	<message name="add_new_airline_response">
+		<part name="value" type="xsd:string" />
+	</message>
+	<message name="add_new_flight">
+		<part name="code" type="xsd:string" />
+		<part name="airlineID" type="xsd:int" />
+		<part name="startTime" type="xsd:dateTime" />
+		<part name="endTime" type="xsd:dateTime" />
+		<part name="startPoint" type="xsd:string" />
+		<part name="endPoint" type="xsd:string" />
+		<part name="seats" type="xsd:int" />
+		<part name="cost" type="xsd:int" />
+	</message>
+	<message name="add_new_flight_response">
+		<part name="value" type="xsd:string" />
+	</message>
+	<message name="is_existed_flight">
+		<part name="code" type="xsd:string" />
+	</message>
+	<message name="is_existed_flight_response">
+		<part name="value" type="xsd:boolean" />
+	</message>
+	<message name="find_flight_by_code">
+		<part name="code" type="xsd:string" />
+	</message>
+	<message name="find_flight_by_code_response">
+		<part name="value" type="xsd:string" />
+	</message>
+	<message name="add_new_constract">
+		<part name="add_new_constract_request" type="tns:add_new_constract_request" />
+	</message>
+	<message name="add_new_constract_response">
+		<part name="result" type="xsd:string" />
+	</message>
+	<message name="check_available_flight">
+		<part name="flightCode" type="xsd:string" />
+	</message>
+	<message name="check_available_flight_response">
+		<part name="value" type="xsd:boolean" />
+	</message>
+	<message name="get_all_flights"></message>
+	<message name="get_all_flights_response">
+		<part name="value" type="xsd:string" />
+	</message>
+	<portType name="services_port">
+		<operation name="add_new_airline">
+			<input message="tns:add_new_airline" />
+			<output message="tns:add_new_airline_response" />
+		</operation>
+		<operation name="add_new_flight">
+			<input message="tns:add_new_flight" />
+			<output message="tns:add_new_flight_response" />
+		</operation>
+		<operation name="is_existed_flight">
+			<input message="tns:is_existed_flight" />
+			<output message="tns:is_existed_flight_response" />
+		</operation>
+		<operation name="find_flight_by_code">
+			<input message="tns:find_flight_by_code" />
+			<output message="tns:find_flight_by_code_response" />
+		</operation>
+		<operation name="add_new_constract">
+			<input message="tns:add_new_constract" />
+			<output message="tns:add_new_constract_response" />
+		</operation>
+		<operation name="check_available_flight">
+			<input message="tns:check_available_flight" />
+			<output message="tns:check_available_flight_response" />
+		</operation>
+		<operation name="get_all_flights">
+			<input message="tns:get_all_flights" />
+			<output message="tns:get_all_flights_response" />
+		</operation>
+	</portType>
+	<binding name="services_binding" type="tns:services_port">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="add_new_airline">
+			<soap:operation soapAction="add_new_airline" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="add_new_flight">
+			<soap:operation soapAction="add_new_flight" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="is_existed_flight">
+			<soap:operation soapAction="is_existed_flight" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="find_flight_by_code">
+			<soap:operation soapAction="find_flight_by_code" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="add_new_constract">
+			<soap:operation soapAction="add_new_constract" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="check_available_flight">
+			<soap:operation soapAction="check_available_flight" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+		<operation name="get_all_flights">
+			<soap:operation soapAction="get_all_flights" />
+			<input>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:airline_ws" />
+			</output>
+		</operation>
+	</binding>
+	<service name="service">
+		<port name="services_port" binding="tns:services_binding">
+			<soap:address location="http://127.0.0.1:3331/services/action" />
+		</port>
+	</service>
+</definitions>
