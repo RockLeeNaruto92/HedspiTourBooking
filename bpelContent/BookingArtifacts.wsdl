@@ -1,31 +1,34 @@
-<?xml version="1.0"?>
-<definitions name="Booking"
-        targetNamespace="http://eclipse.org/bpel/sample/booking"
-        xmlns:tns="http://eclipse.org/bpel/sample/booking"
-        xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
-        xmlns="http://schemas.xmlsoap.org/wsdl/"
-        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-        >
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://eclipse.org/bpel/sample/booking" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="urn:travel_ws" name="Booking" targetNamespace="http://eclipse.org/bpel/sample/booking">
 
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     TYPE DEFINITION - List of types participating in this BPEL process 
-     The BPEL Designer will generate default request and response types
-     but you can define or import any XML Schema type and use them as part 
-     of the message types.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		TYPE DEFINITION - List of types participating in this BPEL process The BPEL 
+		Designer will generate default request and response types but you can define 
+		or import any XML Schema type and use them as part of the message types. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		MESSAGE TYPE DEFINITION - Definition of the message types used as part of 
+		the port type defintions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <plnk:partnerLinkType name="TravelPLT">
+    <plnk:role name="TravelRole" portType="wsdl:travel_services_port"/>
+  </plnk:partnerLinkType>
+    <import location="TravelWS.wsdl" namespace="urn:travel_ws"/>
     <types>
-        <schema attributeFormDefault="unqualified" elementFormDefault="qualified" 
-                targetNamespace="http://eclipse.org/bpel/sample/booking" 
-                xmlns="http://www.w3.org/2001/XMLSchema">
-
-            <element name="BookingRequest">
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://eclipse.org/bpel/sample/booking">
+			<element name="BookingRequest">
                 <complexType>
                     <sequence>
-                        <element name="input" type="string"/>
+                        <element name="tourId" type="int"/>
+                        <element name="customerIdNumber" type="string"/>
+                        <element name="companyName" type="string"/>
+                        <element name="companyPhone" type="string"/>
+                        <element name="companyAddress" type="string"/>
+                        <element name="bookingTickets" type="int"/>
                     </sequence>
                 </complexType>
             </element>
-
+            
             <element name="BookingResponse">
                 <complexType>
                     <sequence>
@@ -33,67 +36,55 @@
                     </sequence>
                 </complexType>
             </element>
-        </schema>
-    </types>
+		</schema>
+	</types>
+	<message name="BookingRequestMessage">
+		<part element="tns:BookingRequest" name="payload"/>
+	</message>
+	<message name="BookingResponseMessage">
+		<part element="tns:BookingResponse" name="payload"/>
+	</message>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
+		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- portType implemented by the Booking BPEL process -->
+	<portType name="Booking">
+		<operation name="process">
+			<input message="tns:BookingRequestMessage"/>
+			<output message="tns:BookingResponseMessage"/>
+		</operation>
+	</portType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PARTNER LINK TYPE DEFINITION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="Booking">
+		<plnk:role name="BookingProvider" portType="tns:Booking"/>
+	</plnk:partnerLinkType>
 
 
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     MESSAGE TYPE DEFINITION - Definition of the message types used as 
-     part of the port type defintions
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <message name="BookingRequestMessage">
-        <part name="payload" element="tns:BookingRequest"/>
-    </message>
-    <message name="BookingResponseMessage">
-        <part name="payload" element="tns:BookingResponse"/>
-    </message>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		BINDING DEFINITION - Defines the message format and protocol details for 
+		a web service. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<binding name="BookingBinding" type="tns:Booking">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="process">
+			<soap:operation soapAction="http://eclipse.org/bpel/sample/booking/process"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
 
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     PORT TYPE DEFINITION - A port type groups a set of operations into
-     a logical service unit.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-
-    <!-- portType implemented by the Booking BPEL process -->
-    <portType name="Booking">
-        <operation name="process">
-            <input  message="tns:BookingRequestMessage" />
-            <output message="tns:BookingResponseMessage"/>
-        </operation>
-    </portType>   
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     PARTNER LINK TYPE DEFINITION
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <plnk:partnerLinkType name="Booking">
-        <plnk:role name="BookingProvider" portType="tns:Booking"/>
-    </plnk:partnerLinkType>
-    
-
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     BINDING DEFINITION - Defines the message format and protocol details
-     for a web service.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <binding name="BookingBinding" type="tns:Booking">
-    	<soap:binding style="document"
-    		transport="http://schemas.xmlsoap.org/soap/http" />
-    	<operation name="process">
-    		<soap:operation
-    			soapAction="http://eclipse.org/bpel/sample/booking/process" />
-    		<input>
-    			<soap:body use="literal" />
-    		</input>
-    		<output>
-    			<soap:body use="literal" />
-    		</output>
-    	</operation>
-    </binding>
-
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     SERVICE DEFINITION - A service groups a set of ports into
-     a service unit.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <service name="BookingService">
-    	<port name="BookingPort" binding="tns:BookingBinding">
-    		<soap:address location="http://localhost:8080/Booking" />
-    	</port>
-    </service>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<service name="BookingService">
+		<port binding="tns:BookingBinding" name="BookingPort">
+			<soap:address location="http://localhost:9090/ode/processes/Booking"/>
+		</port>
+	</service>
 </definitions>
