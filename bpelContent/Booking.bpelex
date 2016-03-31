@@ -22,7 +22,7 @@
   </extensions>
   <extensions>
     <extendedObject href="Booking.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1459444653000"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1459445909000"/>
   </extensions>
   <extensions>
     <extendedObject href="Booking.bpel#//@activity/@activities.2"/>
@@ -70,14 +70,6 @@
   </extensions>
   <extensions>
     <extendedObject href="Booking.bpel#//@activity/@activities.1/@copy.6"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="Booking.bpel#//@activity/@activities.1/@copy.7"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="Booking.bpel#//@activity/@activities.1/@copy.8"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>

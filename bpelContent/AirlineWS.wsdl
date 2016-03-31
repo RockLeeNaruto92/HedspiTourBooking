@@ -5,17 +5,28 @@
 	targetNamespace="urn:airline_ws">
 	<types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
 			targetNamespace="urn:airline_ws">
-			<xsd:complexType name="add_new_constract_request">
-				<xsd:sequence>
-					<xsd:element name="flightID" type="xsd:int" />
-					<xsd:element name="customerIdNumber" type="xsd:string" />
-					<xsd:element name="companyName" type="xsd:string" />
-					<xsd:element name="companyPhone" type="xsd:string" />
-					<xsd:element name="companyAddress" type="xsd:string" />
-					<xsd:element name="bookingSeats" type="xsd:int" />
-				</xsd:sequence>
-			</xsd:complexType>
+			<element name="add_new_constract_request">
+				<complexType>
+					<sequence>
+						<element name="flightId" type="int" />
+						<element name="customerIdNumber" type="string" />
+						<element name="companyName" type="string" />
+						<element name="companyPhone" type="string" />
+						<element name="companyAddress" type="string" />
+						<element name="bookingSeats" type="int" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="add_new_constract_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="string" />
+					</sequence>
+				</complexType>
+			</element>
 		</schema>
 	</types>
 	<message name="add_new_airline">
@@ -52,10 +63,10 @@
 		<part name="value" type="xsd:string" />
 	</message>
 	<message name="add_new_constract">
-		<part name="add_new_constract_request" type="tns:add_new_constract_request" />
+		<part name="add_new_constract_request" element="tns:add_new_constract_request" />
 	</message>
 	<message name="add_new_constract_response">
-		<part name="result" type="xsd:string" />
+		<part name="result" element="tns:add_new_constract_response" />
 	</message>
 	<message name="check_available_flight">
 		<part name="flightCode" type="xsd:string" />

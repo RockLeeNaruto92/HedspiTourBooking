@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:booking="http://eclipse.org/bpel/sample/booking" xmlns:hotel_ws="urn:hotel_ws">
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:airline_ws="urn:airline_ws" xmlns:booking="http://eclipse.org/bpel/sample/booking">
   <process name="booking:Booking">
     <active>true</active>
     <retired>false</retired>
@@ -7,8 +7,8 @@
     <provide partnerLink="client">
       <service name="booking:BookingService" port="BookingPort"/>
     </provide>
-    <invoke partnerLink="HotelPL">
-      <service name="hotel_ws:hotel_service" port="hotel_services_port"/>
+    <invoke partnerLink="AirlinePL">
+      <service name="airline_ws:airline_service" port="airline_services_port"/>
     </invoke>
   </process>
 </deploy>
