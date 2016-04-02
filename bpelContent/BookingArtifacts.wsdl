@@ -11,7 +11,7 @@
     <plnk:role name="HotelRole" portType="wsdl:hotel_services_port"/>
   </plnk:partnerLinkType>
     <plnk:partnerLinkType name="AirlinePLT">
-    <plnk:role name="AirlineRole" portType="wsdl1:airline_services_port"/>
+    <plnk:role name="AirlinePLT" portType="wsdl1:airline_services_port"/>
   </plnk:partnerLinkType>
     <plnk:partnerLinkType name="TravelPLT">
     <plnk:role name="TravelRole" portType="wsdl2:travel_services_port"/>
@@ -106,7 +106,7 @@
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <service name="BookingService">
     	<port binding="tns:BookingBinding" name="BookingPort">
-    		<soap:address location="http://localhost:8080/Booking"/>
+    		<soap:address location="http://localhost:9090/ode/processes/Booking"/>
     	</port>
     </service>
 </definitions>
