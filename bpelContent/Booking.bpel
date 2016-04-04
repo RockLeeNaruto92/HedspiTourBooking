@@ -65,6 +65,8 @@
         
         <bpel:variable name="AirlinePLResponse1" messageType="ns0:check_available_flight_response"></bpel:variable>
         <bpel:variable name="AirlinePLRequest1" messageType="ns0:check_available_flight"></bpel:variable>
+        <bpel:variable name="TravelPLResponse1" messageType="ns1:check_available_tour_response"></bpel:variable>
+        <bpel:variable name="TravelPLRequest1" messageType="ns1:check_available_tour"></bpel:variable>
     </bpel:variables>
 
     <!-- ================================================================= -->         
@@ -115,11 +117,30 @@
                     </bpel:copy>
                 </bpel:assign>
                 <bpel:invoke name="AvailableHotelInvoke" partnerLink="AirlinePL" operation="check_available_flight" portType="ns0:airline_services_port" inputVariable="AirlinePLRequest1" outputVariable="AirlinePLResponse1"></bpel:invoke>
+            </bpel:sequence><bpel:sequence name="AvailableTourSequence">
+                <bpel:assign validate="no" name="AvailableTourAssign">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:check_available_tour_request xmlns:tns="urn:travel_ws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <tns:tourCode>tns:tourCode</tns:tourCode>
+</tns:check_available_tour_request>
+</bpel:literal></bpel:from>
+                        <bpel:to part="tourCode" variable="TravelPLRequest1"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="payload" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:companyName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="tourCode" variable="TravelPLRequest1">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns1:tourCode]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="AvailableTourInvoke" partnerLink="TravelPL" operation="check_available_tour" portType="ns1:travel_services_port" inputVariable="TravelPLRequest1" outputVariable="TravelPLResponse1"></bpel:invoke>
             </bpel:sequence></bpel:flow>
         
         
         <bpel:if name="If">
-            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$AirlinePLResponse1.result/result = "true"]]></bpel:condition>
+            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$TravelPLResponse1.result/result = "true"]]></bpel:condition>
             <bpel:sequence>
                 <bpel:flow name="Flow">
                 <bpel:sequence name="HotelSequence"><bpel:assign validate="no" name="HotelAssignInput">

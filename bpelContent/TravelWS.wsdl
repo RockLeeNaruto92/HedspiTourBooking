@@ -27,6 +27,22 @@
 					</sequence>
 				</complexType>
 			</element>
+			
+			<element name="check_available_tour_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="check_available_tour_request">
+				<complexType>
+					<sequence>
+						<element name="tourCode" type="string" />
+					</sequence>
+				</complexType>
+			</element>
 		</schema>
 	</types>
 	<message name="add_new_place">
@@ -78,10 +94,10 @@
 		<part name="value" type="xsd:string" />
 	</message>
 	<message name="check_available_tour">
-		<part name="tourCode" type="xsd:string" />
+		<part name="tourCode" element="tns:check_available_tour_request" />
 	</message>
 	<message name="check_available_tour_response">
-		<part name="value" type="xsd:boolean" />
+		<part name="result" element="tns:check_available_tour_response" />
 	</message>
 	<message name="update_tour_information">
 		<part name="code" type="xsd:string" />
