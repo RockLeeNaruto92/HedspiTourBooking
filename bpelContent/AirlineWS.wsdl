@@ -27,6 +27,22 @@
 					</sequence>
 				</complexType>
 			</element>
+			
+			<element name="check_available_flight_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="check_available_flight_request">
+				<complexType>
+					<sequence>
+						<element name="flightCode" type="string" />
+					</sequence>
+				</complexType>
+			</element>
 		</schema>
 	</types>
 	<message name="add_new_airline">
@@ -69,10 +85,10 @@
 		<part name="result" element="tns:add_new_constract_response" />
 	</message>
 	<message name="check_available_flight">
-		<part name="flightCode" type="xsd:string" />
+		<part name="flightCode" element="tns:check_available_flight_request" />
 	</message>
 	<message name="check_available_flight_response">
-		<part name="value" type="xsd:boolean" />
+		<part name="result" element="tns:check_available_flight_response" />
 	</message>
 	<message name="get_all_flights"></message>
 	<message name="get_all_flights_response">
