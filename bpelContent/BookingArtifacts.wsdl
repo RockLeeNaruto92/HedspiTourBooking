@@ -26,10 +26,13 @@
                 <complexType>
                     <sequence>
                         <element name="flightId" type="int"/>
+                        <element name="flightCode" type="string"/>
                         <element name="bookingSeats" type="int"/>
                         <element name="hotelId" type="int"/>
+                        <element name="hotelCode" type="string"/>
                         <element name="bookingRooms" type="int"/>
                         <element name="tourId" type="int"/>
+                        <element name="tourCode" type="string"/>
                         <element name="bookingTickets" type="int"/>
                         <element name="checkInDate" type="string"/>
                         <element name="checkOutDate" type="string"/>
