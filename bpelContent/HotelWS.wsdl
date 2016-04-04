@@ -29,6 +29,22 @@
 					</sequence>
 				</complexType>
 			</element>
+			
+			<element name="check_available_hotel_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="check_available_hotel_request">
+				<complexType>
+					<sequence>
+						<element name="hotelCode" type="string" />
+					</sequence>
+				</complexType>
+			</element>
 		</schema>
 	</types>
 	<message name="add_new_hotel">
@@ -66,10 +82,10 @@
 		<part name="result" element="tns:add_new_constract_response" />
 	</message>
 	<message name="check_available_hotel">
-		<part name="hotelCode" type="xsd:string" />
+		<part name="hotelCode" element="tns:check_available_hotel_request" />
 	</message>
 	<message name="check_available_hotel_response">
-		<part name="value" type="xsd:boolean" />
+		<part name="result" element="tns:check_available_hotel_response" />
 	</message>
 	<message name="get_all_hotels"></message>
 	<message name="get_all_hotels_response">
