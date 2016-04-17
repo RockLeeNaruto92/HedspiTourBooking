@@ -7,18 +7,18 @@
      but you can define or import any XML Schema type and use them as part 
      of the message types.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <plnk:partnerLinkType name="HotelPLT">
-    <plnk:role name="HotelRole" portType="wsdl:hotel_services_port"/>
+    <plnk:partnerLinkType name="hotelPLT">
+    <plnk:role name="hotelRole" portType="wsdl:hotel_services_port"/>
   </plnk:partnerLinkType>
-    <plnk:partnerLinkType name="AirlinePLT">
-    <plnk:role name="AirlinePLT" portType="wsdl1:airline_services_port"/>
+    <plnk:partnerLinkType name="airlinePLT">
+    <plnk:role name="airlineRole" portType="wsdl1:airline_services_port"/>
   </plnk:partnerLinkType>
-    <plnk:partnerLinkType name="TravelPLT">
-    <plnk:role name="TravelRole" portType="wsdl2:travel_services_port"/>
+    <plnk:partnerLinkType name="travelPLT">
+    <plnk:role name="travelRole" portType="wsdl2:travel_services_port"/>
   </plnk:partnerLinkType>
-    <import location="HotelWS.wsdl" namespace="urn:hotel_ws"/>
-    <import location="AirlineWS.wsdl" namespace="urn:airline_ws"/>
-    <import location="TravelWS.wsdl" namespace="urn:travel_ws"/>
+    <import location="hotel-services.wsdl" namespace="urn:hotel_ws"/>
+    <import location="airline-services.wsdl" namespace="urn:airline_ws"/>
+    <import location="travel-services.wsdl" namespace="urn:travel_ws"/>
     <types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://eclipse.org/bpel/sample/booking">
 
@@ -26,13 +26,8 @@
                 <complexType>
                     <sequence>
                         <element name="flightId" type="int"/>
-                        <element name="flightCode" type="string"/>
-                        <element name="bookingSeats" type="int"/>
                         <element name="hotelId" type="int"/>
-                        <element name="hotelCode" type="string"/>
-                        <element name="bookingRooms" type="int"/>
                         <element name="tourId" type="int"/>
-                        <element name="tourCode" type="string"/>
                         <element name="bookingTickets" type="int"/>
                         <element name="checkInDate" type="string"/>
                         <element name="checkOutDate" type="string"/>

@@ -1,0 +1,97 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="urn:hotel_ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="hotel_services"
+	targetNamespace="urn:hotel_ws">
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
+			targetNamespace="urn:hotel_ws">
+			<element name="check_available_hotel_request">
+				<complexType>
+					<sequence>
+						<element name="hotelId" type="int"></element>
+						<element name="bookingRooms" type="int"></element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="check_available_hotel_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="int"></element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="add_new_constract_request">
+				<complexType>
+					<sequence>
+						<element name="hotelId" type="int" />
+						<element name="customerIdNumber" type="string" />
+						<element name="companyName" type="string" />
+						<element name="companyPhone" type="string" />
+						<element name="companyAddress" type="string" />
+						<element name="bookingRooms" type="int" />
+						<element name="checkInDate" type="string" />
+						<element name="checkOutDate" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="add_new_constract_response">
+				<complexType>
+					<sequence>
+						<element name="result" type="int"></element>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="check_available_hotel">
+		<part name="check_available_hotel_request" element="tns:check_available_hotel_request" />
+	</message>
+	<message name="check_available_hotel_response">
+		<part name="result" element="tns:check_available_hotel_response" />
+	</message>
+	<message name="add_new_constract">
+		<part name="add_new_constract_request" element="tns:add_new_constract_request" />
+	</message>
+	<message name="add_new_constract_response">
+		<part name="result" element="tns:add_new_constract_response" />
+	</message>
+	<portType name="hotel_services_port">
+		<operation name="check_available_hotel">
+			<input message="tns:check_available_hotel" />
+			<output message="tns:check_available_hotel_response" />
+		</operation>
+		<operation name="add_new_constract">
+			<input message="tns:add_new_constract" />
+			<output message="tns:add_new_constract_response" />
+		</operation>
+	</portType>
+	<binding name="hotel_services_binding" type="tns:hotel_services_port">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="check_available_hotel">
+			<soap:operation soapAction="check_available_hotel" />
+			<input>
+				<soap:body use="literal" namespace="urn:hotel_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:hotel_ws" />
+			</output>
+		</operation>
+		<operation name="add_new_constract">
+			<soap:operation soapAction="add_new_constract" />
+			<input>
+				<soap:body use="literal" namespace="urn:hotel_ws" />
+			</input>
+			<output>
+				<soap:body use="literal" namespace="urn:hotel_ws" />
+			</output>
+		</operation>
+	</binding>
+	<service name="service">
+		<port name="hotel_services_port" binding="tns:hotel_services_binding">
+			<soap:address location="http://127.0.0.1:3332/hotel_services/action" />
+		</port>
+	</service>
+</definitions>

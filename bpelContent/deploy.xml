@@ -7,14 +7,14 @@
     <provide partnerLink="client">
       <service name="booking:BookingService" port="BookingPort"/>
     </provide>
-    <invoke partnerLink="HotelPL">
-      <service name="hotel_ws:hotel_service" port="hotel_services_port"/>
+    <invoke partnerLink="hotelPL">
+      <service name="hotel_ws:service" port="hotel_services_port"/>
     </invoke>
-    <invoke partnerLink="AirlinePL">
-      <service name="airline_ws:airline_service" port="airline_services_port"/>
+    <invoke partnerLink="airlinePL">
+      <service name="airline_ws:service" port="airline_services_port"/>
     </invoke>
-    <invoke partnerLink="TravelPL">
-      <service name="travel_ws:travel_service" port="travel_services_port"/>
+    <invoke partnerLink="travelPL">
+      <service name="travel_ws:service" port="travel_services_port"/>
     </invoke>
   </process>
 </deploy>
